@@ -1,6 +1,9 @@
 library(tidyverse)
 library(ggthemes)
 library(data.table)
+library(psych)
+library(ggforestplot)
+
 pal <- tableau_color_pal("Superfishel Stone")
 col <- pal(10)
 
@@ -83,7 +86,7 @@ p <- ggplot(df2, aes(y = reorder(name, -cor, median), x = cor)) +
   theme_classic() +
   geom_vline(xintercept = 0, linetype = 2, linewidth = 0.3) +
   xlab("Pearson correlation") +
-  ggforestplot::geom_stripes(odd = "#80808010", even = "#00000000") +
+  geom_stripes(odd = "#80808010", even = "#00000000") +
   ylab("") +
   scale_color_manual(values = col[c(4, 6)]) +
   theme(legend.position = "right", legend.title = element_blank()) +

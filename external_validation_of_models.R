@@ -38,14 +38,13 @@ prepare_same_label <- function(d.tr, d.ev){
   return(d.ev)
 }
 
+## read files
 files <- read.delim("data/validation_files.txt", header = T, check.names = F)
-files
 files$model <- files$model %>% paste0("out/model/", .)
 files$training_data <- files$training_data %>% paste0("data/", .)
 files$validation_data <- files$validation_data %>% paste0("data/", .)
-files
 
-i <- 5
+## validate each file
 for(i in 1:nrow(files)){
   print(i)
 
@@ -68,14 +67,8 @@ for(i in 1:nrow(files)){
   d.ev <- fread(d.validation) %>% data.frame(check.names = F) %>% column_to_rownames("V1")
   c.ev <- read.delim(c.validation, row.names = 1, header = T, check.names = F)
   
-  if(!grepl("Vande", files$model[i])){
-    #d.ev <- filter_minor_species_and_add_shannon(d.ev)
-    d.ev$`Shannon diversity` <- diversity(d.ev)
-    c.ev <- c.ev$count %>% log10()
-  }else{
-    d.ev <- d.ev
-    c.ev <- c.ev$Cell_count %>% log10()
-  }
+  d.ev$`Shannon diversity` <- diversity(d.ev)
+  c.ev <- c.ev$count %>% log10()
   
   ## prepare same labels with the same order with that of training data
   d.tr <- model$trainingData

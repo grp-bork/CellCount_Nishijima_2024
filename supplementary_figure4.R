@@ -47,7 +47,7 @@ keep <- df$genus %in% keep.genus
 df <- df[keep, ]
 
 p <- ggplot(df, aes(y = reorder(genus, -cor, median), x = cor, fill = cohort)) +
-  theme_mine() +
+  theme_classic() +
   ggforestplot::geom_stripes(odd = "#80808010", even = "#00000000") +  
   geom_vline(xintercept = 0, linetype = 2) +    
   geom_boxplot(outlier.size = 0.5, size = 0.3) +
