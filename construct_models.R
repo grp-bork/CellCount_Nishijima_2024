@@ -38,20 +38,11 @@ construct_model <- function(d, count, cutoff = 1E-4, pseud = 1E-4, data){
   )
   
   model <- caret::train(d, count, trControl = train_control, method = "xgbTree", metric = "Rsquared", tuneGrid = tune_grid)
-  best <- model$bestTune
-  pred <- model$pred %>% filter(nrounds == best$nrounds & max_depth == best$max_depth & eta == best$eta & gamma == best$gamma & colsample_bytree == best$colsample_bytree & min_child_weight == best$min_child_weight & subsample == best$subsample)
-  
-  count.pred <- tapply(pred$pred, pred$rowIndex, mean)
-  df <- data.frame(pred = count.pred, count = count, data = data, validation = "internal")
-  
+
   ## save result
   out <- paste0("out/model/model.", data, ".rds")
   saveRDS(model, file = out)
-  
-  #out <- paste0("out/internal_validation.", data, ".pdf")
-  #ggsave(p, filename = out, width = 3, height = 3)
-  out <- paste0("out/rds/internal_validation.", data, ".rds")  
-  saveRDS(df, file = out)
+
 }
 
 ## read data
@@ -81,3 +72,23 @@ d <- fread("data/MetaCardis_KO.tsv") %>% data.frame(check.names = F) %>% column_
 c <- read.delim("data/MetaCardis_load.tsv", header = T, check.names = F)
 count <- c$count %>% log10()
 construct_model(d, count, 1E-6, 1E-7, "MetaCardis.KO")
+
+
+
+## Vandeputte_2021_16S
+d <- fread("data/Vandeputte_2021_16S.tsv") %>% data.frame(check.names = F) %>% column_to_rownames("V1")
+c <- read.delim("data/Vandeputte_2021_load.tsv", row.names = 1, header = T, check.names = F)
+
+keep <- apply(is.na(d), 1, sum) == 0
+d <- d[keep, ]
+c <- c[keep, ]
+
+keep <- apply(is.na(c), 1, sum) == 0
+d <- d[keep, ]
+c <- c[keep, ]
+
+count <- log10(as.numeric(c$count))
+d <- d %>% as.matrix() %>% prop.table(1)
+
+construct_model(d, count, 1E-4, 1E-4, "Vandeputte_2021.16S")
+

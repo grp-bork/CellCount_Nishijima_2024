@@ -1,62 +1,13 @@
 library(tidyverse)
 library(ggthemes)
 library(ggrastr)
+library(data.table)
 library(egg)
 library(scales)
+library(vegan)
+
 pal <- tableau_color_pal("Tableau 20")
 col <- pal(20)
-
-## external validation
-external_validation_function <- function(model, d, count, title){
-  table <- list()
-  temp <- predict(model, d)
-  
-  res <- data.frame(count = count, pred = temp)
-  scc <- cor.test(res$count, res$pred, use = "pairwise.complete.obs", method = "spearman")
-  scc.v <- round(scc$estimate, digits = 2)
-  scc.p <-  scientific(scc$p.value, digits = 2)  
-  
-  cor.test(res$count, res$pred, use = "pairwise.complete.obs", method = "pearson")
-  pcc <- cor.test(res$count, res$pred, use = "pairwise.complete.obs", method = "pearson")
-  
-  pcc.r <- round(pcc$estimate, digits = 2)
-  pcc.p <-  scientific(pcc$p.value, digits = 2)  
-  
-  lab1 <- sprintf(" italic(R): %s", pcc.r) %>% parse(text = .)
-  lab2 <- sprintf(" italic(P): %s", pcc.p) %>% parse(text = .)
-  lab1 %>% mode()
-  
-  xmin <- min(res$count)
-  ymax <- max(res$pred)    
-  
-  xmin
-  cor_pred <- ggplot(res, aes(x = count, y = pred)) +
-    theme_classic() +
-    ggtitle(paste0(title, " (ext. validation)")) +
-    xlab("Microbial load") +
-    ylab("Predicted value") +    
-    annotate(geom = "text", x = xmin, y = ymax, label = lab1, hjust = 0, vjust = 0.1) +
-    annotate(geom = "text", x = xmin, y = ymax, label = lab2, hjust = 0, vjust = 1.6) +
-    geom_abline(linetype = 2, col = "gray") +
-    #geom_point_rast(alpha = 0.4, size = 0.1) +
-    geom_point_rast(size = 0.1) +
-    geom_smooth(method = "lm", se = F, col = col[1]) 
-  cor_pred
-  
-  table[[1]] <- cor_pred
-  table[[2]] <- res
-  return(table)
-}
-
-
-filter_minor_species_and_add_shannon <- function(d, c, thre = 1E-4, pseud = 1E-4){
-  shannon <- vegan::diversity(d)
-  d$`Shannon diversity` <- shannon
-  
-  keep <- apply(d, 2, mean) > thre & apply(d > 0, 2, mean) > 0.1
-  d <- d[, keep]
-  return(d)
-}
 
 
 ## prepare same df for prediction
@@ -94,10 +45,15 @@ files$training_data <- files$training_data %>% paste0("data/", .)
 files$validation_data <- files$validation_data %>% paste0("data/", .)
 files
 
-i <- 3
-res <- c()
+i <- 5
 for(i in 1:nrow(files)){
-    
+  print(i)
+
+  data <- files$training_data[i] %>% str_remove("data/") %>% str_remove(".tsv") %>% 
+  str_remove("_v25") %>% 
+  str_remove(".2021.*") %>%     
+  str_replace("_", ".")
+  
   ## read model
   model <- read_rds(files$model[i])
   
@@ -113,7 +69,8 @@ for(i in 1:nrow(files)){
   c.ev <- read.delim(c.validation, row.names = 1, header = T, check.names = F)
   
   if(!grepl("Vande", files$model[i])){
-    d.ev <- filter_minor_species_and_add_shannon(d.ev, c.ev) ## filter some samples and add Shannon diversity
+    #d.ev <- filter_minor_species_and_add_shannon(d.ev)
+    d.ev$`Shannon diversity` <- diversity(d.ev)
     c.ev <- c.ev$count %>% log10()
   }else{
     d.ev <- d.ev
@@ -127,17 +84,19 @@ for(i in 1:nrow(files)){
   
   # sanity check
   identical(colnames(d.ev), colnames(d.tr)) %>% print()
-  
+
   ## scaling
   d.min <- min(d.ev[d.ev != 0])/2
   d.ev <- log10(d.ev + d.min) %>% scale()
   
   ## evaluate the model
   pred <- predict(model, d.ev)
-  df <- data.frame(pred = pred, count = c.ev, data = data, validation = "external")
   
   ## save result
-  out <- paste0("out/rds/internal_validation.", data, ".rds")  
+  df <- data.frame(id = rownames(d.ev), pred = pred, count = c.ev, data = data, validation = "external")
+  df %>% head()
+  
+  out <- paste0("out/rds/external_validation.", data, ".rds")  
   saveRDS(df, file = out)
 }
 

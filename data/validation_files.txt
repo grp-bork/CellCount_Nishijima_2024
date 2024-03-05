@@ -3,4 +3,4 @@ model.GALAXY.mOTUs.rds	GALAXY_mOTUs_v25.tsv	MetaCardis_mOTUs_v25.tsv
 model.GALAXY.KO.rds	GALAXY_KO.tsv	MetaCardis_KO.tsv
 model.MetaCardis.mOTUs.rds	MetaCardis_mOTUs_v25.tsv	GALAXY_mOTUs_v25.tsv
 model.MetaCardis.KO.rds	MetaCardis_KO.tsv	GALAXY_KO.tsv
-model_Vandeputte.rds	Vandeputte_2021_qmp_16S.tsv	Vandeputte_2017_qmp_16S.tsv
+model.Vandeputte.rds	Vandeputte_2021_16S.tsv	Vandeputte_2017_16S.tsv
