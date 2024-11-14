@@ -1,5 +1,7 @@
 # CellCount_Nishijima_2024
 # Fecal microbial load is a major determinant of gut microbiome variation and a confounder for disease associations
+# https://www.sciencedirect.com/science/article/pii/S0092867424012042
+# https://doi.org/10.1016/j.cell.2024.10.022
 
 Suguru Nishijima, Evelina Stankevic, Oliver Aasmets, Thomas S. B. Schmidt, Naoyoshi Nagata, Marisa Isabell Keller, Pamela Ferretti, Helene Bæk Juel, Anthony Fullam, Shahriyar Mahdi Robbani, Christian Schudoma, Johanne Kragh Hansen, Louise Aas Holm, Mads Israelsen, Robert Schierwagen, Nikolaj Torp, Manimozhiyan Arumugam, Flemming Bendtsen, Charlotte Brøns, Cilius Esmann Fonvig, Jens-Christian Holm, Trine Nielsen, Julie Steen Pedersen, Maja Sofie Thiele, Jonel Trebicka, Elin Org, Aleksander Krag, Torben Hansen, Michael Kuhn, and Peer Bork, on behalf of the GALAXY and MicrobLiver Consortia
 
