@@ -71,4 +71,4 @@ p2.ext
 
 ## merge
 p <- egg::ggarrange(p1.int, p2.int, p1.ext, p2.ext, ncol = 4)
-ggsave(p, filename = "out/figure1de.pdf", width = 12, height = 3)
+ggsave(p, filename = "out/Figure_DE.pdf", width = 12, height = 3)
