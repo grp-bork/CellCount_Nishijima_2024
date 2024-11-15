@@ -98,7 +98,7 @@ p <- ggplot(df2, aes(y = reorder(name, -cor, median), x = cor)) +
   theme(strip.text.x = element_blank()) +
   coord_flip()
 p
-ggsave(p, filename = "out/figure1c.pdf", width = 10, height = 4)
+ggsave(p, filename = "out/figure_1C.pdf", width = 10, height = 4)
 
 ## save intermediate results
 saveRDS(df, file = "out/rds/cor_df.rds")

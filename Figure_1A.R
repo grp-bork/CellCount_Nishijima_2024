@@ -4,10 +4,9 @@ library(data.table)
 library(ggrastr)
 library(vegan)
 library(egg)
+
 pal <- tableau_color_pal("Tableau 20")
 col <- pal(20)
-
-setwd("~/ownCloud/GALAXY/cell_count/github_code/MicrobialLoad_Nishijima_2024/")
 
 ## define function
 modify_format <- function(d, thre = 1E-5, pseud = 1E-4){
@@ -16,7 +15,6 @@ modify_format <- function(d, thre = 1E-5, pseud = 1E-4){
   d %>% dim() %>% print()
   return(d)
 }
-
 
 plot_envfit <- function(d, count, e, title){
   set.seed(1)
@@ -75,7 +73,6 @@ plot_envfit <- function(d, count, e, title){
   return(p2)
 }
 
-
 ## read data
 d1 <- fread("data/GALAXY_mOTUs_v25.tsv") %>% data.frame(check.names = F) %>% column_to_rownames("V1")
 d2 <- fread("data/MetaCardis_mOTUs_v25.tsv") %>% data.frame(check.names = F) %>% column_to_rownames("V1")
@@ -101,6 +98,6 @@ p2 <- plot_envfit(d2, log10(md2$count), e2, "MetaCardis")
 
 ## save plots
 p <- ggarrange(p1, p2, ncol = 2)
-ggsave(p, filename = "out/figure1a.pdf", width = 7, height = 2.5)
+ggsave(p, filename = "out/figure_1A.pdf", width = 7, height = 2.5)
 
 

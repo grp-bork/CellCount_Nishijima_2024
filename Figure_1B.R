@@ -3,6 +3,7 @@ library(ggthemes)
 library(data.table)
 library(ggrastr)
 library(ggpubr)
+
 col <- c("#6d2f20", "#b75347", "#df7e66", "#e09351", "#edc775", "#94b594", "#224b5e")
 
 ## read data
@@ -11,7 +12,6 @@ md2 <- read.delim("data/MetaCardis_load.tsv")
 
 e1 <- read.delim("data/Galaxy_enterotypes.tsv", header = T)
 e2 <- read.delim("data/MetaCardis_enterotypes.tsv", header = T)
-
 
 ## GALAXY/MicrobLiver
 df1 <- data.frame(id = md1$ID, count = md1$count, enterotype = factor(e1$enterotype))
@@ -52,6 +52,6 @@ p2
 
 ## save plots
 p <- ggarrange(p1, p2, ncol = 2)
-ggsave(p, filename = "out/figure1b.pdf", width = 4, height = 3)
+ggsave(p, filename = "out/figure_1B.pdf", width = 4, height = 3)
 
 
